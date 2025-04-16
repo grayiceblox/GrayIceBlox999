@@ -1,3 +1,89 @@
+--// CONFIG
+shared.LoaderTitle = "Gray Ice Blox Loader"
+shared.LoaderColors = {
+    Background = Color3.fromRGB(25, 25, 25),
+    Accent = Color3.fromRGB(0, 170, 255),
+    Text = Color3.fromRGB(255, 255, 255)
+}
+shared.LoaderKeyFrames = {
+    {Time = 0.2, Size = 0.2},
+    {Time = 0.4, Size = 0.4},
+    {Time = 0.6, Size = 0.6},
+    {Time = 0.8, Size = 0.8},
+    {Time = 1, Size = 1}
+}
+
+--// MAIN SCRIPT
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Clear previous GUI if exists
+if playerGui:FindFirstChild("CustomLoader") then
+    playerGui:FindFirstChild("CustomLoader"):Destroy()
+end
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CustomLoader"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- Create background frame
+local bg = Instance.new("Frame")
+bg.Size = UDim2.new(1, 0, 1, 0)
+bg.BackgroundColor3 = shared.LoaderColors.Background
+bg.BorderSizePixel = 0
+bg.Parent = screenGui
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 60)
+title.Position = UDim2.new(0, 0, 0.2, 0)
+title.BackgroundTransparency = 1
+title.Text = shared.LoaderTitle
+title.TextColor3 = shared.LoaderColors.Text
+title.Font = Enum.Font.GothamBold
+title.TextSize = 36
+title.Parent = bg
+
+-- User Avatar
+local avatar = Instance.new("ImageLabel")
+avatar.Size = UDim2.new(0, 100, 0, 100)
+avatar.Position = UDim2.new(0.5, -50, 0.4, 0)
+avatar.BackgroundTransparency = 1
+avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
+avatar.Parent = bg
+
+-- Progress bar background
+local barBg = Instance.new("Frame")
+barBg.Size = UDim2.new(0.5, 0, 0, 10)
+barBg.Position = UDim2.new(0.25, 0, 0.7, 0)
+barBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+barBg.BorderSizePixel = 0
+barBg.Parent = bg
+
+-- Progress bar fill
+local bar = Instance.new("Frame")
+bar.Size = UDim2.new(0, 0, 1, 0)
+bar.BackgroundColor3 = shared.LoaderColors.Accent
+bar.BorderSizePixel = 0
+bar.Parent = barBg
+
+-- Animate progress bar
+coroutine.wrap(function()
+    for _, step in ipairs(shared.LoaderKeyFrames) do
+        local tween = TweenService:Create(bar, TweenInfo.new(step.Time, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(step.Size, 0, 1, 0)
+        })
+        tween:Play()
+        tween.Completed:Wait()
+    end
+    wait(1)
+    screenGui:Destroy() -- Remove loader
+end)()
 Roblox";
 shared.LoaderKeyFrames = {
     [1] = {
